@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './EditableText.module.css'
-import { insertPlainTextAtCursor, sanitizePlainText } from './sanitizeEditableText'
+import { insertPlainTextAtCursor, stripDisallowedMarkup } from './sanitizeEditableText'
 
 type Props = {
   tag: 'h1' | 'h2' | 'p' | 'span'
@@ -10,6 +10,8 @@ type Props = {
   className?: string
   onChange: (next: string) => void
 }
+
+const INVALID_INPUT_MESSAGE = 'Nepovolený vstup: HTML/SCRIPT tagy nejsou povolené.'
 
 export function EditableText({ tag: Tag, value, editing, className, onChange }: Props) {
   return (
@@ -20,14 +22,23 @@ export function EditableText({ tag: Tag, value, editing, className, onChange }: 
       onPaste={(event) => {
         if (!editing) return
         event.preventDefault()
-        const plain = sanitizePlainText(event.clipboardData.getData('text/plain'))
-        insertPlainTextAtCursor(plain)
+        const { cleaned, blocked } = stripDisallowedMarkup(event.clipboardData.getData('text/plain'))
+        if (blocked) window.alert(INVALID_INPUT_MESSAGE)
+        insertPlainTextAtCursor(cleaned)
       }}
       onDrop={(event) => {
         if (!editing) return
         event.preventDefault()
+        window.alert(INVALID_INPUT_MESSAGE)
       }}
-      onBlur={(event) => onChange(sanitizePlainText(event.currentTarget.innerText))}
+      onBlur={(event) => {
+        const { cleaned, blocked } = stripDisallowedMarkup(event.currentTarget.innerText)
+        if (blocked) {
+          event.currentTarget.innerText = cleaned
+          window.alert(INVALID_INPUT_MESSAGE)
+        }
+        onChange(cleaned)
+      }}
     >
       {value}
     </Tag>
