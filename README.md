@@ -1,4 +1,12 @@
-# Neo World Weby Template (Next.js + Payload)
+# Neo World Weby Template (Next.js  Payload)
+ 
+Tahle verze je připravená tak, aby šla na Ubuntu serveru (např. Hetzner) rozjet jen přes `git pull`  pár příkazů z README bez dalších úprav kódu.
+ 
+## Tech stack
+ - Next.js 15 App Router  TypeScript
+- Payload CMS (ve stejné aplikaci)
+- PostgreSQL 16
+- Docker Compose pro produkční běh
 
 Tahle verze je připravená tak, aby šla na Ubuntu serveru (např. Hetzner) rozjet jen přes `git pull` + pár příkazů z README bez dalších úprav kódu.
 
