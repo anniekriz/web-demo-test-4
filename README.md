@@ -67,7 +67,7 @@ Aplikace poběží na:
 
 ### 5) Seed obsahu a uživatelů (jen poprvé)
 ```bash
-docker compose -f docker-compose.prod.yml exec web npm run seed
+docker compose -f docker-compose.prod.yml exec -e NODE_ENV=development web npm run seed
 ```
 
 Výchozí seed účty (pokud nezměníš env):
