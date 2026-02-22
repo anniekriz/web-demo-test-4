@@ -1,5 +1,8 @@
 .body {
   line-height: 1.7;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .editing {
