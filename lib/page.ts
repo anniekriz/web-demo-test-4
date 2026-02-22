@@ -106,7 +106,7 @@ export const getPageBySlug = async (slug: string): Promise<PageData> => {
     heroImage: normalizeMedia(page.heroImage),
     aboutHeading: page.aboutHeading,
     aboutBody: page.aboutBody,
-    aboutImage: normalizeMedia(page.aboutImage as MediaInput),
+    aboutImage: normalizeMedia(page.aboutImage),
     updatedAt: page.updatedAt,
   }
 }
