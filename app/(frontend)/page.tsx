@@ -6,3 +6,5 @@ export default async function HomePage() {
 
   return <PageClient initialPage={page} canEdit={canUserEdit(user?.role)} role={user?.role ?? null} />
 }
+
+export const dynamic = 'force-dynamic'

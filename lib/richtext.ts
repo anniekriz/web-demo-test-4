@@ -1,11 +1,25 @@
+type LexicalTextChild = {
+  text?: string
+}
+
+type LexicalNode = {
+  children?: LexicalTextChild[]
+}
+
+type LexicalRoot = {
+  root?: {
+    children?: LexicalNode[]
+  }
+}
+
 export const lexicalToPlainText = (value: unknown): string => {
-  const children = (value as any)?.root?.children
+  const children = (value as LexicalRoot | null | undefined)?.root?.children
   if (!Array.isArray(children)) return ''
 
   return children
-    .map((node: any) =>
+    .map((node) =>
       Array.isArray(node.children)
-        ? node.children.map((child: any) => child.text ?? '').join('')
+        ? node.children.map((child) => child.text ?? '').join('')
         : '',
     )
     .join('\n')

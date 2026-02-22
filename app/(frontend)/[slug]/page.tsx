@@ -7,3 +7,5 @@ export default async function SlugPage({ params }: { params: Promise<{ slug: str
 
   return <PageClient initialPage={page} canEdit={canUserEdit(user?.role)} role={user?.role ?? null} />
 }
+
+export const dynamic = 'force-dynamic'

@@ -20,6 +20,13 @@ type Props = {
 
 type LocalImage = { file: File; previewUrl: string; alt: string }
 
+type UploadedMedia = {
+  id: string | number
+  alt: string
+  url: string
+  updatedAt?: string
+}
+
 // helper: pokud je id "123", vrať number 123, jinak vrať původní string
 const coerceIdForApi = (id: string | number | null | undefined) => {
   if (id === null || id === undefined) return null
@@ -83,7 +90,7 @@ export function PageClient({ initialPage, canEdit }: Props) {
       draft.aboutImage.updatedAt ?? draft.updatedAt,
     )}`
 
-  const uploadMedia = async (file: File, alt: string) => {
+  const uploadMedia = async (file: File, alt: string): Promise<UploadedMedia> => {
     const form = new FormData()
     form.append('file', file)
     form.append('alt', alt)
@@ -102,7 +109,7 @@ export function PageClient({ initialPage, canEdit }: Props) {
     }
 
     // Payload někdy vrací { doc: {...} }, někdy přímo doc
-    return (json?.doc ?? json) as any
+    return (json?.doc ?? json) as UploadedMedia
   }
 
   // slug -> id (jen pokud linkType internal a internalPage je object)

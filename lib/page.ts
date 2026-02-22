@@ -30,6 +30,13 @@ export type PageData = {
   updatedAt: string
 }
 
+type MediaInput = {
+  id?: string | number
+  alt?: string
+  url?: string
+  updatedAt?: string
+}
+
 export const canUserEdit = (role?: string | null) => role === 'admin' || role === 'owner'
 
 export const getCurrentUser = async () => {
@@ -38,11 +45,11 @@ export const getCurrentUser = async () => {
   return result.user as { role?: string } | null
 }
 
-const normalizeMedia = (value: any): CmsMedia => ({
-  id: String(value.id),
-  alt: value.alt,
-  url: value.url,
-  updatedAt: value.updatedAt,
+const normalizeMedia = (value: MediaInput | null | undefined): CmsMedia => ({
+  id: String(value?.id ?? ''),
+  alt: value?.alt ?? '',
+  url: value?.url ?? '',
+  updatedAt: value?.updatedAt,
 })
 
 export const getPageBySlug = async (slug: string): Promise<PageData> => {
@@ -67,10 +74,10 @@ export const getPageBySlug = async (slug: string): Promise<PageData> => {
     heroHeadline: page.heroHeadline,
     heroSubheadline: page.heroSubheadline,
     heroCta: page.heroCta,
-    heroImage: normalizeMedia(page.heroImage),
+    heroImage: normalizeMedia(page.heroImage as MediaInput),
     aboutHeading: page.aboutHeading,
     aboutBody: page.aboutBody,
-    aboutImage: normalizeMedia(page.aboutImage),
+    aboutImage: normalizeMedia(page.aboutImage as MediaInput),
     updatedAt: page.updatedAt,
   }
 }

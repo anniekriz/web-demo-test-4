@@ -1,14 +1,84 @@
 # Neo World Weby Template (Next.js + Payload)
 
-Production-oriented editable website template with strict in-place editing controls.
+Tahle verze je připravená tak, aby šla na Ubuntu serveru (např. Hetzner) rozjet jen přes `git pull` + pár příkazů z README bez dalších úprav kódu.
 
-## Tech stack
+## Co běží
 - Next.js 15 App Router + TypeScript
-- Payload CMS (same app)
-- PostgreSQL (Docker Compose)
-- CSS Modules + global CSS (no inline styles)
+- Payload CMS (ve stejné aplikaci)
+- PostgreSQL 16
+- Docker Compose pro produkční běh
 
-## Setup
+---
+
+## Rychlé spuštění na Hetzner Ubuntu (doporučeno)
+
+### 1) Požadavky na server
+Nainstaluj Docker + Docker Compose plugin (jednorázově):
+
+```bash
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo $VERSION_CODENAME) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+docker --version
+docker compose version
+```
+
+### 2) Naklonuj repozitář
+```bash
+git clone <TVŮJ_REPO_URL>
+cd web-demo-test-4
+```
+
+### 3) Připrav produkční env
+```bash
+cp .env.example .env
+```
+
+Pak v `.env` minimálně změň:
+- `PAYLOAD_SECRET` na dlouhý náhodný řetězec.
+- volitelně seed hesla (`SEED_ADMIN_PASSWORD`, `SEED_OWNER_PASSWORD`).
+
+> Produkční DB URL se skládá automaticky v `docker-compose.prod.yml`, takže ji nemusíš ručně řešit.
+
+### 4) Build + start
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+Aplikace poběží na:
+- web + Payload API: `http://SERVER_IP:3000`
+- admin login: `http://SERVER_IP:3000/admin`
+- Payload CMS: `http://SERVER_IP:3000/cms`
+
+### 5) Seed obsahu a uživatelů (jen poprvé)
+```bash
+docker compose -f docker-compose.prod.yml exec web npm run seed
+```
+
+Výchozí seed účty (pokud nezměníš env):
+- Admin: `admin@example.com` / `ChangeMe123!`
+- Owner: `owner@example.com` / `ChangeMe123!`
+
+---
+
+## Aktualizace po `git pull`
+
+```bash
+git pull
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+---
+
+## Lokální vývoj (bez produkčního compose)
+
 1. Start PostgreSQL:
    ```bash
    docker compose up -d postgres
@@ -30,25 +100,13 @@ Production-oriented editable website template with strict in-place editing contr
    npm run seed
    ```
 
-## Login flows
-- `/admin`: simple client-facing login page for owner/admin. After login, edit controls appear on site preview.
-- `/cms`: Payload admin UI (admin role only).
+---
 
 ## Routing
-- `/` renders Payload page with slug `home`.
-- `/home` permanently redirects to `/`.
-- `/{slug}` renders other Payload page slugs automatically (e.g. `/contact`).
+- `/` renderuje Payload page se slug `home`.
+- `/home` permanentně redirectuje na `/`.
+- `/{slug}` renderuje ostatní stránky z Payload (např. `/contact`).
 
-## Seed output
-Default seed credentials (change immediately in non-local environments):
-- Admin: `admin@example.com` / `ChangeMe123!`
-- Owner: `owner@example.com` / `ChangeMe123!`
-
-Use env vars to override:
-- `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`
-- `SEED_OWNER_EMAIL`, `SEED_OWNER_PASSWORD`
-
-## Notes
-- Single source of truth for Postgres is root `docker-compose.yml`.
-- Image previews in edit mode are local object URLs until Save uploads to `/api/media`.
-- Save remains in edit mode and refreshes the `original` snapshot.
+## Poznámky
+- Image preview v edit módu používá lokální object URLs až do Save.
+- Save zůstává v edit módu a refreshuje `original` snapshot.
