@@ -13,6 +13,17 @@ export const stripDisallowedMarkup = (value: string) => {
   }
 }
 
+export const enforceTextLimit = (value: string, maxLength: number) => {
+  if (value.length <= maxLength) {
+    return { value, trimmed: false }
+  }
+
+  return {
+    value: value.slice(0, maxLength),
+    trimmed: true,
+  }
+}
+
 export const insertPlainTextAtCursor = (text: string) => {
   const selection = window.getSelection()
   if (!selection || selection.rangeCount === 0) return
