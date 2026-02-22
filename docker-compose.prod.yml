@@ -29,6 +29,9 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-neo_world_weby}
     ports:
       - "3000:3000"
+    volumes:
+      - media_data:/app/media
 
 volumes:
   postgres_data:
+  media_data:
