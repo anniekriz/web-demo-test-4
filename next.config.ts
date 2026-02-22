@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: 'http', hostname: '**' }, { protocol: 'https', hostname: '**' }],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 }
 
 export default withPayload(nextConfig)

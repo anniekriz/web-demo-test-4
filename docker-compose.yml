@@ -3,13 +3,32 @@ services:
     image: postgres:16
     restart: unless-stopped
     environment:
-      POSTGRES_DB: neo_world_weby
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - '5433:5432'
+      POSTGRES_DB: ${POSTGRES_DB:-neo_world_weby}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-neo_world_weby}
+    ports:
+      - "3000:3000"
 
 volumes:
   postgres_data:
