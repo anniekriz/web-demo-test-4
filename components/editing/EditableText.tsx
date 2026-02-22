@@ -15,10 +15,10 @@ type Props = {
 const INVALID_INPUT_MESSAGE = 'Nepovolený vstup: HTML/SCRIPT tagy nejsou povolené.'
 
 const defaultMaxLengthByTag: Record<Props['tag'], number> = {
-  h1: 120,
-  h2: 120,
+  h1: 150,
+  h2: 150,
   p: 5000,
-  span: 120,
+  span: 150,
 }
 
 export function EditableText({ tag: Tag, value, editing, className, maxLength, onChange }: Props) {
