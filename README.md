@@ -18,7 +18,7 @@ Tahle verze je připravená tak, aby šla na Ubuntu serveru (např. Hetzner) roz
 
 ---
 
-## Rychlé spuštění na Hetzner Ubuntu 
+## Rychlé spuštění na Hetzner Ubuntu (doporučeno)
 
 ### 1) Požadavky na server
 Nainstaluj Docker + Docker Compose plugin (jednorázově):
