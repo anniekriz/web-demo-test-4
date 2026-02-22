@@ -17,5 +17,9 @@ ENV PORT=3000
 COPY --from=builder /app ./
 RUN npm ci --omit=dev && npm cache clean --force
 
+RUN cp -a /app/media /app/media-default
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 3000
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["npm", "run", "start"]
